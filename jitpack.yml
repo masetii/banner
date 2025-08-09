@@ -1,0 +1,4 @@
+# 仓库根目录 /jitpack.yml
+jdk: openjdk8
+install:
+  - ./gradlew :banner:assembleRelease :banner:publishToMavenLocal
