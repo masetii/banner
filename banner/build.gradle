@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+// 下面两行仅在本地发布 Maven Central 时打开；JitPack 不需要
+// apply plugin: 'maven-publish'
+// apply plugin: 'signing'
 
 version = '2.2.3'
 
@@ -29,6 +30,7 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.1.0-beta02"
 }
 
+// 生成源码 jar，JitPack 会自动识别
 task androidSourcesJar(type: Jar) {
     archiveClassifier.set("sources")
     from android.sourceSets.main.java.source
@@ -36,40 +38,32 @@ task androidSourcesJar(type: Jar) {
     exclude "**/BuildConfig.class"
 }
 
+// 屏蔽掉 Maven Central 发布逻辑，避免 sonatypeUsername 报错
+/*
 publishing {
     publications {
         release(MavenPublication) {
-            // group id，发布后引用的依赖的 group id
             groupId 'io.github.youth5201314'
-            // 发布后引用的依赖的 artifact id
             artifactId 'banner'
-            // 发布的版本
             version version
-            // 发布的 arr 的文件和源码文件
             artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
             artifact androidSourcesJar
             pom {
-                // 构件名称，可以自定义
                 name = 'banner'
-                // 构件描述
                 description = 'Android Banner 2.0 全新轮播控件，采用viewpager2为基础控件，支持AndroidX'
-                // 构件主页
                 url = 'https://github.com/youth5201314/banner'
-                // 许可证名称和地址
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
                         url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
-                // 开发者信息
                 developers {
                     developer {
                         name = '春'
                         email = '1028729086@qq.com'
                     }
                 }
-                // 版本控制仓库地址
                 scm {
                     url = 'https://github.com/youth5201314/banner'
                     connection = 'scm:git:github.com/youth5201314/banner.git'
@@ -80,12 +74,10 @@ publishing {
     }
     repositories {
         maven {
-            // 发布的位置，这里根据发布的版本区分了 SNAPSHOT 和最终版本两种情况
             def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
             def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
-                // 这里就是之前在 issues.sonatype.org 注册的账号
                 username sonatypeUsername
                 password sonatypePassword
             }
@@ -96,4 +88,4 @@ publishing {
 signing {
     sign publishing.publications
 }
-
+*/
